@@ -1,5 +1,7 @@
 const fs = require('fs');
 const path = require('path');
+const RSSParser = require('rss-parser');
+const parser = new RSSParser();
 const dataFilePath = path.join(__dirname, '..', 'data.json');
 
 module.exports = async (message) => {
@@ -12,7 +14,7 @@ module.exports = async (message) => {
   const userId = message.author.id;
   const guildId = message.guild.id;
   const channelId = message.channel.id;
-  const registeredAt = new Date().toISOString();
+  const currentTime = new Date().toISOString(); // 현재 시간을 ISO 문자열로 변환
 
   fs.readFile(dataFilePath, 'utf8', (err, data) => {
     if (err) {
@@ -26,7 +28,8 @@ module.exports = async (message) => {
       guildId: guildId,
       channelId: channelId,
       blogLink: blogLink,
-      registeredAt: registeredAt,
+      registeredAt: currentTime,
+      lastChecked: currentTime,
     });
 
     fs.writeFile(
