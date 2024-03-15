@@ -4,6 +4,7 @@ const dataFilePath = path.join(__dirname, '..', 'data.json');
 
 module.exports = async (message) => {
   const userId = message.author.id;
+  const guildId = message.guild.id;
 
   fs.readFile(dataFilePath, 'utf8', (err, data) => {
     if (err) {
@@ -11,8 +12,17 @@ module.exports = async (message) => {
       return;
     }
 
-    const usersData = data ? JSON.parse(data) : [];
-    const userData = usersData.find((entry) => entry.userId === userId);
+    const guildsData = data ? JSON.parse(data) : { guilds: [] };
+    const guildData = guildsData.guilds.find(
+      (guild) => guild.guildId === guildId
+    );
+
+    if (!guildData) {
+      message.reply('이 서버에 등록된 블로그 링크 정보가 없습니다.');
+      return;
+    }
+
+    const userData = guildData.users.find((user) => user.userId === userId);
 
     if (!userData) {
       message.reply('등록된 블로그 링크 정보를 찾을 수 없습니다.');
