@@ -21,21 +21,24 @@ fs.readdirSync(commandsPath)
     commands[file.replace('.js', '')] = command;
   });
 
-// client.once(Events.ClientReady, () => {
-//   console.log(`Ready! Logged in as ${client.user.tag}`);
-//   setInterval(() => checkNewPosts(client), 600000); // 10분마다 새 글 확인
-// });
 client.once(Events.ClientReady, (c) => {
   console.log(`Ready! Logged in as ${c.user.tag}`);
-  // 30초마다 새 글 확인 로직을 실행합니다.
-  setInterval(() => checkNewPosts(client), 60000);
+  // 설정한 간격으로 새 글 확인 로직 실행
+  setInterval(() => checkNewPosts(client), 60000); // 매 1분마다 실행
 });
 
 client.on(Events.MessageCreate, (message) => {
   if (!message.content.startsWith('!') || message.author.bot) return;
   const args = message.content.slice(1).split(/ +/);
   const commandName = args.shift().toLowerCase();
-  commands[commandName]?.(message);
+
+  if (commands[commandName]) {
+    commands[commandName](message);
+  } else {
+    message.reply(
+      "Sorry, I don't recognize that command. Try !help for a list of commands."
+    );
+  }
 });
 
 client.login(token);
