@@ -24,7 +24,7 @@ fs.readdirSync(commandsPath)
 client.once(Events.ClientReady, (c) => {
   console.log(`Ready! Logged in as ${c.user.tag}`);
   // 설정한 간격으로 새 글 확인 로직 실행
-  setInterval(() => checkNewPosts(client), 60000); // 매 1분마다 실행
+  setInterval(() => checkNewPosts(client), 6000000); // 매 1분마다 실행
 });
 
 client.on(Events.MessageCreate, (message) => {
